@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoStream - Watch Together (Plain)</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding-bottom: 50px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #fff;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            min-height: 80vh;
+            padding-top: 20px;
+        }
+
+        .hero h1 {
+            font-size: 54px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            color: #f8fafc;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 20px;
+            margin-bottom: 60px;
+            max-width: 600px;
+        }
+
+        /* Unified Single Card */
+        .solid-card {
+            width: 100%;
+            max-width: 450px;
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .tabs {
+            display: flex;
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #94a3b8;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        .tab.active {
+            background: #334155;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .solid-card h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .solid-card p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .create-theme h2 { color: #d8b4fe; }
+        .join-theme h2 { color: #93c5fd; }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            font-size: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a78bfa;
+            background: #111827;
+        }
+
+        .error {
+            color: #fca5a5;
+            font-size: 13px;
+            margin-top: -5px;
+            margin-bottom: 15px;
+            display: none;
+            padding-left: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            transition: 0.3s;
+            border: none;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #7c3aed;
+        }
+
+        .btn-primary:hover {
+            background: #6d28d9;
+        }
+
+        .btn-secondary {
+            background: #2563eb;
+        }
+
+        .btn-secondary:hover {
+            background: #1d4ed8;
+        }
+
+        @media(max-width:768px) {
+            .hero h1 { font-size: 40px; }
+            .hero p { font-size: 18px; }
+            .solid-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">🎬 CoStream</div>
+            <div>
+                <a href="/">Home</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>Ready to watch?</h1>
+            <p>Start a new viewing session or join an existing party with your friends.</p>
+
+            <div class="solid-card">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('create')">Host Room</div>
+                    <div class="tab" onclick="switchTab('join')">Join Room</div>
+                </div>
+
+                <!-- Create Room Content -->
+                <div id="create-content" class="tab-content active create-theme">
+                    <h2>Host a Session</h2>
+                    <p>Set up a new video stream and share the link.</p>
+                    
+                    <input id="video" placeholder="Video URL (e.g. mp4, m3u8)">
+                    <div id="videoError" class="error">Please enter a video URL</div>
+                    
+                    <input id="user1" class="margin-input" placeholder="Your username">
+                    <div id="userError1" class="error">Please enter a username</div>
+                    
+                    <button class="btn btn-primary" onclick="createRoom()">Start Watching</button>
+                </div>
+
+                <!-- Join Room Content -->
+                <div id="join-content" class="tab-content join-theme">
+                    <h2>Join a Room</h2>
+                    <p>Have a room code? Enter it here to join.</p>
+                    
+                    <input id="room" placeholder="Room ID (e.g. ABC123)">
+                    <div id="roomError" class="error">Please enter a Room ID</div>
+                    
+                    <input id="user2" class="margin-input" placeholder="Your username">
+                    <div id="userError2" class="error">Please enter a username</div>
+                    
+                    <button class="btn btn-secondary" onclick="joinRoom()">Join Party</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            if(tab === 'create') {
+                document.getElementById('create-content').classList.add('active');
+                document.getElementById('join-content').classList.remove('active');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.remove('active');
+            } else {
+                document.getElementById('create-content').classList.remove('active');
+                document.getElementById('join-content').classList.add('active');
+                document.querySelectorAll('.tab')[0].classList.remove('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            }
+        }
+
+        function showError(id) { document.getElementById(id).style.display = "block"; }
+        function hideError(id) { document.getElementById(id).style.display = "none"; }
+
+        function createRoom() {
+            let video = document.getElementById("video").value;
+            let user = document.getElementById("user1").value;
+            let valid = true;
+
+            if (video === "") { showError("videoError"); valid = false; } else { hideError("videoError"); }
+            if (user === "") { showError("userError1"); valid = false; } else { hideError("userError1"); }
+
+            if (valid) {
+                window.location.href = "/room?video=" + encodeURIComponent(video) + "&user=" + encodeURIComponent(user);
+            }
+        }
+
+        function joinRoom() {
+            let room = document.getElementById("room").value;
+            let user = document.getElementById("user2").value;
+            let valid = true;
+
+            if (room === "") { showError("roomError"); valid = false; } else { hideError("roomError"); }
+            if (user === "") { showError("userError2"); valid = false; } else { hideError("userError2"); }
+
+            if (valid) {
+                window.location.href = "/room?room=" + room + "&user=" + encodeURIComponent(user);
+            }
+        }
+    </script>
+</body>
+</html>

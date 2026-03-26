@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Party - Synchronized Video Experience</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Modal for Room Setup -->
+        <div id="roomModal" class="modal">
+            <div class="modal-content">
+                <h1>🎬 CoStream</h1>
+                <p>Create or join a room to watch videos together in real-time.</p>
+
+                <form onsubmit="handleCreateRoom(event)">
+                    <div class="modal-section">
+                        <h3>Create New Room</h3>
+                        <input type="text" id="createVideoUrl"
+                            placeholder="Enter video URL (e.g., https://example.com/video.mp4)" class="input-field">
+                        <input type="text" id="createUsername" placeholder="Your username" class="input-field">
+                        <button type="submit" id="createRoomBtn" class="btn btn-primary">Create Room</button>
+                    </div>
+                </form>
+
+                <hr class="divider">
+
+                <form onsubmit="handleJoinRoom(event)">
+                    <div class="modal-section">
+                        <h3>Join Existing Room</h3>
+                        <input type="text" id="joinRoomId" placeholder="Room ID (e.g., ABC123)" class="input-field">
+                        <input type="text" id="joinUsername" placeholder="Your username" class="input-field">
+                        <button type="submit" id="joinRoomBtn" class="btn btn-secondary">Join Room</button>
+                    </div>
+                </form>
+
+                <div id="roomError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); color: white; z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+            <div
+                style="border: 4px solid #f3f3f3; border-top: 4px solid #9333ea; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;">
+            </div>
+            <p style="margin-top: 20px; font-weight: bold; font-size: 18px;">Joining Room...</p>
+        </div>
+
+        <!-- Main Watch Party Interface -->
+        <div id="watchPartyContainer" class="watch-party-container" style="display: none;">
+
+            <!-- Header -->
+            <div class="header">
+                <h1>🎬 Watch Party</h1>
+                <div class="header-info">
+                    <div class="room-id-display">
+                        Room: <strong id="displayRoomId"></strong>
+                    </div>
+                    <div class="users-count">
+                        Users: <strong id="usersCount">1</strong>
+                    </div>
+                    <button id="leaveRoomBtn" class="btn btn-danger btn-small">Leave Room</button>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+
+                <!-- Video Player Section -->
+                <div class="video-section">
+                    <div class="video-container">
+                        <!-- YouTube Player -->
+                        <iframe id="youtubePlayer" style="display: none;" width="100%" height="100%" frameborder="0"
+                            allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                        <!-- Standard HTML5 Video Player -->
+                        <video id="videoPlayer" controls crossorigin="anonymous">
+                            <source src="" type="video/mp4">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+
+                    <!-- Status Display -->
+                    <div class="status-display">
+                        <div id="syncStatus" class="status-badge status-idle">Ready</div>
+                        <div id="statusMessage" class="status-text"></div>
+                    </div>
+
+                    <!-- Users List -->
+                    <div class="users-list-panel">
+                        <h3>👥 Users in Room</h3>
+                        <ul id="usersList" class="users-list">
+                            <li>Loading...</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Chat Section -->
+                <div class="chat-section">
+                    <div class="chat-header">
+                        <h3>💬 Live Chat</h3>
+                    </div>
+
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="chat-welcome">
+                            <p>Welcome to the watch party!</p>
+                            <p>Messages will appear here.</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input">
+                        <button id="sendChatBtn" class="btn btn-primary btn-send">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO Client Library -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- Application Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
