@@ -18,8 +18,8 @@ import json
 
 # Initialize Flask app and SocketIO
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-change-this'
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.config['SECRET_KEY'] = 'costream-secret-123'
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 # ==============================================================================
 # DATA STRUCTURE: In-Memory Room Storage
@@ -356,4 +356,4 @@ if __name__ == '__main__':
     print("Starting Watch Party Server...")
     port = int(os.environ.get("PORT", 5000))
     print(f"Access the app at http://localhost:{port}")
-    socketio.run(app, debug=True, host='0.0.0.0', port=port)
+    socketio.run(app, host='0.0.0.0', port=port)
